@@ -8,6 +8,6 @@ public class AddTaskRequestValidator : AbstractValidator<AddTaskRequestModel>
     {
         RuleFor(x => x.CreatedBy).MinimumLength(2);
         RuleFor(x => x.Title).MinimumLength(2);
-        RuleFor(x => x.Description).MinimumLength(10);
+        RuleFor(x => x.Description).MinimumLength(2);
     }
 }

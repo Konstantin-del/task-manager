@@ -34,7 +34,7 @@ export const store = createStore({
   actions: {
     async fetchTasks({ commit }) {
       try {
-        const response = await axios.get("https://localhost:7232/api/tasks");
+        const response = await axios.get("http://localhost:5018/api/tasks");
         commit("SET_TASKS", response.data);
       } catch (error) {
         commit(
@@ -47,7 +47,7 @@ export const store = createStore({
     async addTask({ commit }, task) {
       try {
         const response = await axios.post(
-          "https://localhost:7232/api/tasks",
+          "http://localhost:5018/api/tasks",
           task
         );
         commit("ADD_TASK", response.data);
@@ -62,7 +62,7 @@ export const store = createStore({
     async updateStatusTask({ commit }, data) {
       try {
         const response = await axios.patch(
-          `https://localhost:7232/api/tasks/status?id=${data.id}&status=${data.status}`
+          `http://localhost:5018/api/tasks/status?id=${data.id}&status=${data.status}`
         );
         commit("UPDATE_STATUS_TASK", response.data);
       } catch (error) {
@@ -76,7 +76,7 @@ export const store = createStore({
     async updateIndexTask({ commit }, data) {
       try {
         const response = await axios.patch(
-          `https://localhost:7232/api/tasks`,
+          `http://localhost:5018/api/tasks`,
           data
         );
         commit("UPDATE_INDEX_TASK", response.data);
@@ -91,7 +91,7 @@ export const store = createStore({
     async addAssigned({}, data) {
       try {
         await axios.patch(
-          `https://localhost:7232/api/tasks/assigned?id=${data.id}&name=${data.name}`
+          `http://localhost:5018/api/tasks/assigned?id=${data.id}&name=${data.name}`
         );
       } catch (error) {
         commit(

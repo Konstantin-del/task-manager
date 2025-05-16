@@ -20,7 +20,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddTaskRequestValidator>();
 
 builder.Services.AddDbContext<TaskContext>(
     options => options.UseLoggerFactory(MyLoggerFactory).UseFirebird(
-        "User=fred;Password=123456;Database=/var/lib/firebird/data/db.fdb;DataSource=localhost;Port=32768;Dialect=3;"));
+        "User=fred;Password=123456;Database=/var/lib/firebird/data/db.fdb;DataSource=172.17.0.2;Port=3050;Dialect=3;"));
 
 builder.Services.AddAutoMapper(
     typeof(TaskMapperProfile),
