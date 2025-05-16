@@ -46,4 +46,11 @@ public class TaskController(
         var updatedTasks = await taskService.UpdateIndexTasksAsync(tasksList);
         return Ok(updatedTasks);
     }
+
+    [HttpPatch("Assigned")]
+    public async Task<ActionResult> AddAssignedAsync([FromQuery] int id, string name)
+    {
+        await taskService.AddAssignedAsync(id, name);
+        return Ok();
+    }
 }

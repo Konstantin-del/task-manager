@@ -1,25 +1,20 @@
 <script setup>
 import TaskComponent from "./TaskComponent.vue";
 import { store } from "../store";
-import { ref, onMounted, defineExpose, onUnmounted } from "vue";
+import { ref, onMounted, defineExpose, handleError } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 
-// defineProps({
-//   showNewTask: Boolean,
-//   //showNewTask: Function,
-// });
+const props = defineProps({
+  handleShowAddAssigned: Function,
+  handleShowTask: Function,
+  customHandleError: Function,
+});
 
 const draggable = VueDraggableNext;
 
 const tasksInProgress = ref([]);
 const tasksToDo = ref([]);
 const tasksDone = ref([]);
-
-onMounted(() => {
-  store.dispatch("fetchTasks").then(() => {
-    sortAndUpdateRefWithTasks(store.state.tasks);
-  });
-});
 
 function sortAndUpdateRefWithTasks(array) {
   const arr1 = [];
@@ -42,40 +37,51 @@ function sortAndUpdateRefWithTasks(array) {
   tasksDone.value = arr3.sort((a, b) => a.index - b.index);
 }
 
-const showNewTask = () => {
+function returnItemBack(id) {
+  const item = tasksInProgress.value.find((t) => t.id === id);
+  item.status = 1;
+  store.dispatch("updateStatusTask", item);
+  tasksToDo.value.unshift(item);
+  tasksInProgress.value.splice(item.index, 1);
+  const tasksList = updateIndex([tasksToDo.value, tasksInProgress.value]);
+  store.dispatch("updateIndexTask", tasksList);
+}
+
+function showNewTask() {
   let result = store.getters.allTasks;
   sortAndUpdateRefWithTasks(result);
-  updateTasksInDb(null);
-};
+  const tasksList = updateIndex([tasksToDo.value]);
+  store.dispatch("updateIndexTask", tasksList);
+}
 
 defineExpose({
   showNewTask,
+  returnItemBack,
 });
 
 function updateTasksInDb(event) {
   let tasksForUpdateIndex = [];
 
-  if (event) {
-    let newContainerId = event.to.id;
-    let oldContainerId = event.from.id;
+  let newContainerId = event.to.id;
+  let oldContainerId = event.from.id;
 
-    if (oldContainerId === "1") tasksForUpdateIndex.push(tasksToDo.value);
-    if (oldContainerId === "2") tasksForUpdateIndex.push(tasksInProgress.value);
-    if (oldContainerId === "3") tasksForUpdateIndex.push(tasksDone.value);
+  if (oldContainerId === "1") tasksForUpdateIndex.push(tasksToDo.value);
+  else if (oldContainerId === "2")
+    tasksForUpdateIndex.push(tasksInProgress.value);
+  else if (oldContainerId === "3") tasksForUpdateIndex.push(tasksDone.value);
 
-    if (oldContainerId !== newContainerId) {
-      const data = {};
-      data.id = event.item._underlying_vm_.id;
-      data.status = newContainerId;
-      store.dispatch("updateStatusTask", data);
+  if (oldContainerId !== newContainerId) {
+    const data = {};
+    data.id = event.item._underlying_vm_.id;
+    data.status = newContainerId;
+    store.dispatch("updateStatusTask", data);
 
-      if (newContainerId === "1") tasksForUpdateIndex.push(tasksToDo.value);
-      if (newContainerId === "2")
-        tasksForUpdateIndex.push(tasksInProgress.value);
-      if (newContainerId === "3") tasksForUpdateIndex.push(tasksDone.value);
-    }
-  } else {
-    tasksForUpdateIndex.push(tasksToDo.value);
+    if (newContainerId === "1") tasksForUpdateIndex.push(tasksToDo.value);
+    else if (newContainerId === "2") {
+      tasksForUpdateIndex.push(tasksInProgress.value);
+      if (oldContainerId === "1") props.handleShowAddAssigned(data.id);
+    } else if (newContainerId === "3")
+      tasksForUpdateIndex.push(tasksDone.value);
   }
 
   const tasksList = updateIndex(tasksForUpdateIndex);
@@ -92,6 +98,21 @@ function updateIndex(array) {
   });
   return tasksWithNewIndex;
 }
+
+function stopMove(event) {
+  if (event.to.id === "3") {
+    return false;
+  }
+  return true;
+}
+
+onMounted(() => {
+  store.dispatch("fetchTasks").then(() => {
+    const error = store.getters.error;
+    if (error) props.customHandleError(error);
+    else sortAndUpdateRefWithTasks(store.state.tasks);
+  });
+});
 </script>
 
 <template>
@@ -102,11 +123,12 @@ function updateIndex(array) {
         v-model="tasksToDo"
         group="tasks"
         @end="updateTasksInDb"
+        :move="stopMove"
         class="tasks-container"
         id="1"
       >
         <template v-for="task in tasksToDo" :key="task.id">
-          <TaskComponent :task="task" />
+          <TaskComponent :handleShowTask="handleShowTask" :task="task" />
         </template>
       </draggable>
     </div>
@@ -120,7 +142,7 @@ function updateIndex(array) {
         id="2"
       >
         <template v-for="task in tasksInProgress" :key="task.id">
-          <TaskComponent :task="task" />
+          <TaskComponent :handleShowTask="handleShowTask" :task="task" />
         </template>
       </draggable>
     </div>
@@ -134,14 +156,14 @@ function updateIndex(array) {
         id="3"
       >
         <template v-for="task in tasksDone" :key="task.id">
-          <TaskComponent :task="task" />
+          <TaskComponent :handleShowTask="handleShowTask" :task="task" />
         </template>
       </draggable>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .main-container {
   display: flex;
   justify-content: space-around;

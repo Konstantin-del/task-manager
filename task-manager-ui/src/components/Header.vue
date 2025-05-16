@@ -22,13 +22,13 @@ h1 {
 header {
   position: sticky;
   top: 0;
-  width: 100%;
   height: 10vh;
   background-color: burlywood;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 0 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .btn {

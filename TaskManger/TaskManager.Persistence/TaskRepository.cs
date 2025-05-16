@@ -31,15 +31,23 @@ public class TaskRepository(TaskContext context): ITaskRepository
 
     public async Task<TaskEntity?> UpdateTaskStatusAsync(int id, Status status)
     {
-        var result = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
-        if(result is not null) 
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+        if(task is not null) 
         {
-            result.Status = status;
+            task.Status = status;
             await context.SaveChangesAsync();
-            return result;
+            return task;
         }
         return null;
     }
 
-
+    public async Task AddAssignedAsync(int id, string name)
+    {
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+        if(task is not null) 
+        {
+            task.AssignedTo = name;
+            await context.SaveChangesAsync();
+        }   
+    }
 }

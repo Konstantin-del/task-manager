@@ -4,6 +4,9 @@ using TaskManager.Application;
 using TaskManager.Persistence;
 using TaskManager.Application.Mapping;
 using TaskManger.Presentation.Mappings;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using TaskManger.Presentation.Models.Validators;
 
 ILoggerFactory MyLoggerFactory = LoggerFactory.Create(build =>
 { build.AddConsole(); });
@@ -12,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddOpenApi();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<AddTaskRequestValidator>();
 
 builder.Services.AddDbContext<TaskContext>(
     options => options.UseLoggerFactory(MyLoggerFactory).UseFirebird(
@@ -39,12 +43,6 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("CorsPolicy");
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
 app.UseHttpsRedirection();
 

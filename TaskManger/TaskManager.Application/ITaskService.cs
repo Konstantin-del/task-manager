@@ -12,4 +12,6 @@ public interface ITaskService
     public Task<TaskDto> UpdateStatusTasksAsync(int id, Status status);
 
     public Task<List<TaskDto>> UpdateIndexTasksAsync(List<TaskDto> tasks);
+
+    public Task AddAssignedAsync(int id, string name);
 }

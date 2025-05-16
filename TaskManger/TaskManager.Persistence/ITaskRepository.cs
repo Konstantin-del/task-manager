@@ -12,4 +12,6 @@ public interface ITaskRepository
     public Task UpdateTasksIndexAsync(List<TaskEntity> tasks);
 
     public Task<TaskEntity?>UpdateTaskStatusAsync(int id, Status status);
+
+    public Task AddAssignedAsync(int id, string name);
 }

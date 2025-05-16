@@ -42,4 +42,9 @@ public class TaskService(
 
         return mapper.Map<List<TaskDto>>(updatedTasks);
     }
+
+    public async Task AddAssignedAsync(int id, string name)
+    {
+        await taskRepository.AddAssignedAsync(id, name);
+    }
 }

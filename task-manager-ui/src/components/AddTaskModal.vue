@@ -5,26 +5,30 @@ import TextariaCustom from "./TextariaCustom.vue";
 import { ref } from "vue";
 import { store } from "../store";
 
-defineProps({
+const props = defineProps({
   isShowTogle: Function,
+  callIsShowTogle: Function,
+  customHandleError: Function,
 });
 
 const task = ref({
   createdBy: "",
   title: "",
   description: "",
-  index: -1, //    store.state.startIndex,
+  index: -1,
 });
-
-const emit = defineEmits(["callIsShowTogle"]);
 
 const addNewTask = () => {
   if (task.value.createdBy && task.value.title && task.value.description) {
     store.dispatch("addTask", task.value).then(() => {
-      emit("callIsShowTogle");
-      task.value.createdBy = "";
-      task.value.title = "";
-      task.value.description = "";
+      const error = store.getters.error;
+      if (error) props.customHandleError(error);
+      else {
+        props.callIsShowTogle();
+        task.value.createdBy = "";
+        task.value.title = "";
+        task.value.description = "";
+      }
     });
   }
 };
