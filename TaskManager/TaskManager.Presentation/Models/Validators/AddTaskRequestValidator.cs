@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TaskManger.Presentation.Models.Validators;
+namespace TaskManager.Presentation.Models.Validators;
 
 public class AddTaskRequestValidator : AbstractValidator<AddTaskRequestModel>
 {

@@ -65,6 +65,7 @@ function handleShowError() {
     :keepId="keepId"
     :handleNotAddAssigned="handleNotAddAssigned"
     :handleShowAddAssigned="handleShowAddAssigned"
+    :customHandleError="customHandleError"
   />
   <TaskModal
     v-if="isShowTask"

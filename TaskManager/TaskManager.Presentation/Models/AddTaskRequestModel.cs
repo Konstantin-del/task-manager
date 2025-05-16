@@ -1,4 +1,4 @@
-﻿namespace TaskManger.Presentation.Models;
+﻿namespace TaskManager.Presentation.Models;
 
 public class AddTaskRequestModel
 {

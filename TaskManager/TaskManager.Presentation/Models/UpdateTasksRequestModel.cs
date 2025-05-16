@@ -1,10 +1,10 @@
 ﻿using TaskManager.Core;
 
-namespace TaskManger.Presentation.Models;
+namespace TaskManager.Presentation.Models;
 
-public class TaskResponseModel
+public class UpdateTasksRequestModel
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
 
     public string CreatedBy { get; set; }
 
@@ -14,9 +14,9 @@ public class TaskResponseModel
 
     public string Description { get; set; }
 
-    public Status? Status { get; set; }
+    public Status Status { get; set; }
 
     public DateTimeOffset? CreatedTime { get; set; }
 
-    public int? Index { get; set; }
+    public int Index { get; set; }
 }

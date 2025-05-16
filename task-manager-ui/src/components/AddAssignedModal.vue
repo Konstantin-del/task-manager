@@ -8,6 +8,7 @@ const props = defineProps({
   handleNotAddAssigned: Function,
   handleShowAddAssigned: Function,
   keepId: Number,
+  customHandleError: Function,
 });
 
 const name = ref("");
@@ -16,12 +17,17 @@ const addAssigned = () => {
   const data = {};
   data.id = props.keepId;
   data.name = name.value;
-  console.log(data);
+
   if (data.name && data.id) {
-    store.dispatch("addAssigned", data);
-    name.value = "";
+    store.dispatch("addAssigned", data).then(() => {
+      const error = store.getters.error;
+      if (error) props.customHandleError(error);
+      else {
+        name.value = "";
+        props.handleShowAddAssigned();
+      }
+    });
   }
-  props.handleShowAddAssigned();
 };
 </script>
 

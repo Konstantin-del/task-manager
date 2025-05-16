@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application;
 using TaskManager.Application.Dtos;
 using TaskManager.Core;
-using TaskManger.Presentation.Models;
+using TaskManager.Presentation.Models;
 
-namespace TaskManger.Presentation.Controllers;
+namespace TaskManager.Presentation.Controllers;
 
 [ApiController]
 [Route("api/tasks")]

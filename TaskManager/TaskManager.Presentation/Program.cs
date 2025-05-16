@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using TaskManager.Application;
 using TaskManager.Persistence;
 using TaskManager.Application.Mapping;
-using TaskManger.Presentation.Mappings;
+using TaskManager.Presentation.Mappings;
 using FluentValidation.AspNetCore;
 using FluentValidation;
-using TaskManger.Presentation.Models.Validators;
+using TaskManager.Presentation.Models.Validators;
 
 ILoggerFactory MyLoggerFactory = LoggerFactory.Create(build =>
 { build.AddConsole(); });

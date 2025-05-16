@@ -1,9 +1,9 @@
 ﻿
 using AutoMapper;
 using TaskManager.Application.Dtos;
-using TaskManger.Presentation.Models;
+using TaskManager.Presentation.Models;
 
-namespace TaskManger.Presentation.Mappings;
+namespace TaskManager.Presentation.Mappings;
 
 public class ControllerTaskMapperProfile :Profile
 {
