@@ -1,0 +1,42 @@
+version: "6"
+services:
+  firebird:
+    image: firebirdsql/firebird
+    container_name: firebird_db
+    environment:
+      - FIREBIRD_USER=fred
+      - FIREBIRD_PASSWORD=123456
+      - FIREBIRD_DATABASE=db.fdb
+    ports:
+      - "3050:3050"
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver
+    container_name: cloudbeaver
+    ports:
+      - "8978:8978"
+    depends_on:
+      - firebird
+    environment:
+      - CB_SERVER=firebird_db
+      - CB_PORT=3050
+      - CB_USER=fred
+      - CB_PASSWORD=123456
+
+  task-manager:
+    build:
+      context: ./TaskManager
+    ports:
+      - 5018:8080
+    depends_on:
+      - firebird
+    environment:
+      DATABASE_CONNECTION: "User=fred;Password=123456;Database=/var/lib/firebird/data/db.fdb;DataSource=firebird;Port=3050;Dialect=3;"
+    restart: always
+
+  task-manager-ui:
+    build:
+      context: ./task-manager-ui
+    ports:
+      - "3030:80"
+    restart: always

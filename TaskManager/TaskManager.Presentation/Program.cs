@@ -18,9 +18,11 @@ builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<AddTaskRequestValidator>();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? Environment.GetEnvironmentVariable( "DATABASE_CONNECTION" ); 
+
 builder.Services.AddDbContext<TaskContext>(
-    options => options.UseLoggerFactory(MyLoggerFactory).UseFirebird(
-        "User=fred;Password=123456;Database=/var/lib/firebird/data/db.fdb;DataSource=172.17.0.2;Port=3050;Dialect=3;"));
+    options => options.UseLoggerFactory(MyLoggerFactory).UseFirebird(connectionString));
 
 builder.Services.AddAutoMapper(
     typeof(TaskMapperProfile),
